@@ -1,23 +1,15 @@
 #!/usr/bin/env python3
 
-from __future__ import annotations
+from typing import Dict
 
-from typing import Dict, Optional
-
-from scheduler_interface import SchedulerBase
-from task_models import TaskResult, TaskSpec, _id_sort_key
-from runner_engine import run_with_deps
-
+from base_scheduler import BaseScheduler
+from task_spec import TaskSpec
+from utils import  id_sort_key
 
 #параллельный планировщик, в workers нет аргументов, 
-class ParallelFIFODepScheduler(SchedulerBase):
-    name = "parallel"
+class ParallelFIFODepScheduler(BaseScheduler):
+    def get_name(self) -> str:
+        return "parallel"
 
-    def run(self, task_py: str, tasks: Dict[str, TaskSpec], *, workers: int, jitter_pct: float, seed: Optional[int]) -> Dict[str, TaskResult]:
-        return run_with_deps(
-            task_py, tasks,
-            workers=workers,
-            ready_key=lambda tid: (_id_sort_key(tid),),
-            jitter_pct=jitter_pct,
-            seed=seed,
-        )
+    def _make_ready_key(self, tasks: Dict[str, TaskSpec]):
+        return lambda tid: (id_sort_key(tid),)

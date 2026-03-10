@@ -8,8 +8,6 @@
 #--seed: чтобы jitter был воспроизводимым между прогоном (в связке с task-id).
 
 
-from __future__ import annotations
-
 import argparse
 import time
 import math

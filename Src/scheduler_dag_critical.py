@@ -1,30 +1,17 @@
 #!/usr/bin/env python3
 
-from __future__ import annotations
+from typing import Dict
 
-from dataclasses import dataclass
-from typing import Dict, Optional
-
-from scheduler_interface import SchedulerBase
-from task_models import TaskResult, TaskSpec, _id_sort_key
-from runner_engine import compute_blevel, run_with_deps
+from base_scheduler import BaseScheduler
+from runner_engine import compute_blevel
+from task_spec import TaskSpec
+from utils import id_sort_key
 
 
-@dataclass(frozen=True)
-class DagCriticalPathData:
-    blevel: Dict[str, float]
+class DagCriticalPathScheduler(BaseScheduler):
+    def get_name(self) -> str:
+        return "dag_critical"
 
-
-#DAG-граф + критический путь
-class DagCriticalPathScheduler(SchedulerBase):
-    name = "dag_critical"
-
-    def run(self, task_py: str, tasks: Dict[str, TaskSpec], *, workers: int, jitter_pct: float, seed: Optional[int]) -> Dict[str, TaskResult]:
-        data = DagCriticalPathData(blevel=compute_blevel(tasks))
-        return run_with_deps(
-            task_py, tasks,
-            workers=workers,
-            ready_key=lambda tid: (-data.blevel[tid], -tasks[tid].priority, _id_sort_key(tid)),
-            jitter_pct=jitter_pct,
-            seed=seed,
-        )
+    def _make_ready_key(self, tasks: Dict[str, TaskSpec]):
+        blevel = compute_blevel(tasks)
+        return lambda tid: (-blevel[tid], -tasks[tid].priority, id_sort_key(tid))
