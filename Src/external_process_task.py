@@ -16,7 +16,7 @@ class ExternalProcessTask(ITask):
     entrypoint: str
 
     def get_id(self) -> str:
-        return self.spec.id
+        return self.task_id
         
     def get_name(self) -> str:
         return self.name
