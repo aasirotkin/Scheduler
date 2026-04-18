@@ -11,6 +11,10 @@ class ITask(ABC):
         ...
 
     @abstractmethod
+    def get_name(self) -> str:
+        ...
+
+    @abstractmethod
     def get_spec(self) -> TaskSpec:
         ...
 
