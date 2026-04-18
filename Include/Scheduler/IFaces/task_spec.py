@@ -8,7 +8,6 @@ from typing import Tuple
 @dataclass(frozen=True)
 class TaskSpec:
 #Описание задачи, которое видит планировщик/оценочные параметры
-    id: str
     mem_mb: float
     net_mbps: float
     cpu_percent: float
