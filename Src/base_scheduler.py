@@ -46,8 +46,9 @@ class BaseScheduler(IScheduler):
         task_py: Optional[str] = None
 
         for task in self._tasks.values():
+            task_id = task.get_id()
             spec = task.get_spec()
-            tasks[spec.id] = spec
+            tasks[task_id] = spec
 
             entrypoint = task.get_entrypoint()
             if task_py is None:
