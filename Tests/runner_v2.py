@@ -31,8 +31,15 @@ def main():
         jitter_pct=args.jitter_pct,
     )
 
-    for spec in tasks.values():
-        sched.add_task(ExternalProcessTask(spec=spec, entrypoint=args.task_py))
+    for task_id, spec in tasks.items():
+        sched.add_task(
+            ExternalProcessTask(
+                task_id=task_id,
+                name=task_id,
+                spec=spec,
+                entrypoint=args.task_py,
+            )
+        )
 
     results = sched.run_all()
     save_csv(args.out, results)
