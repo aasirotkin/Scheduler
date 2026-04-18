@@ -10,11 +10,16 @@ from task_spec import TaskSpec
 
 @dataclass(frozen=True)
 class ExternalProcessTask(ITask):
+    task_id: str
+    name: str
     spec: TaskSpec
     entrypoint: str
 
     def get_id(self) -> str:
         return self.spec.id
+        
+    def get_name(self) -> str:
+        return self.name
 
     def get_spec(self) -> TaskSpec:
         return self.spec
