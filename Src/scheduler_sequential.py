@@ -9,7 +9,7 @@ from utils import id_sort_key
 #Последовательный планировщик с учетом зависимостей, но workers = 1
 class SequentialDepsScheduler(BaseScheduler):
     def get_name(self) -> str:
-	return "sequential"
+		return "sequential"
 
     def _effective_workers(self) -> int:
         return 1
