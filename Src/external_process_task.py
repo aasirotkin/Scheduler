@@ -4,8 +4,8 @@
 
 from dataclasses import dataclass
 
-from i_task import ITask
-from task_spec import TaskSpec
+from Include.Scheduler.IFaces.i_task import ITask
+from Include.Scheduler.IFaces.task_spec import TaskSpec
 
 
 @dataclass(frozen=True)
