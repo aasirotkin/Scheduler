@@ -4,11 +4,11 @@
 from abc import abstractmethod
 from typing import Dict, List, Optional
 
-from i_scheduler import IScheduler
-from i_task import ITask
-from task_result import TaskResult
-from task_spec import TaskSpec
-from runner_engine import run_with_deps
+from Include.Scheduler.IFaces.i_scheduler import IScheduler
+from Include.Scheduler.IFaces.i_task import ITask
+from Include.Scheduler.IFaces.task_result import TaskResult
+from Include.Scheduler.IFaces.task_spec import TaskSpec
+from Include.Scheduler.runner_engine import run_with_deps
 
 
 class BaseScheduler(IScheduler):
