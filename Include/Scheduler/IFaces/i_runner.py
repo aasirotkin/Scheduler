@@ -6,8 +6,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Optional
 
-from i_task import ITask
-from task_result import TaskResult
+from Include.Scheduler.IFaces.i_task import ITask
+from Include.Scheduler.IFaces.task_result import TaskResult
 
 
 @dataclass(frozen=True)
