@@ -9,9 +9,9 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from i_runner import IRunner, RunnerResources
-from i_task import ITask
-from task_result import TaskResult
+from Include.Scheduler.IFaces.i_runner import IRunner, RunnerResources
+from Include.Scheduler.IFaces.i_task import ITask
+from Include.Scheduler.IFaces.task_result import TaskResult
 
 #исполнитель для нескольких задач сразу, хранит аткивные задачи и оценивает по ресурсам запуск следущей
 class LocalRunner(IRunner):
