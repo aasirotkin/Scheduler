@@ -2,10 +2,10 @@
 
 from typing import Dict
 
-from base_scheduler import BaseScheduler
-from runner_engine import compute_blevel
-from task_spec import TaskSpec
-from utils import id_sort_key
+from Src.base_scheduler import BaseScheduler
+from Include.Scheduler.runner_engine import compute_blevel
+from Include.Scheduler.IFaces.task_spec import TaskSpec
+from Include.Scheduler.IFaces.utils import id_sort_key
 
 
 class DagCriticalPathScheduler(BaseScheduler):
