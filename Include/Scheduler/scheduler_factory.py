@@ -1,22 +1,47 @@
 #!/usr/bin/env python3
 
-from typing import Optional
+from enum import Enum
+from typing import List, Union
 
-from i_scheduler import IScheduler
-from registry import create_scheduler_impl
+from Include.Scheduler.IFaces.i_runner import IRunner
+from Include.Scheduler.IFaces.i_scheduler import IScheduler
+from Include.Scheduler.IFaces.i_task import ITask
 
-#функция создания реализации класса для разных типов планировщика
+from Src.scheduler_dag_critical import DagCriticalPathScheduler
+from Src.scheduler_dag_priority import DagUserPriorityScheduler
+from Src.scheduler_parallel import ParallelFIFODepScheduler
+from Src.scheduler_sequential import SequentialDepsScheduler
+
+
+class SchedulerKind(str, Enum):
+    SEQUENTIAL = "sequential"
+    PARALLEL = "parallel"
+    DAG_PRIORITY = "dag_priority"
+    DAG_CRITICAL = "dag_critical"
+
+
+# фабрика создания планировщика: принимает тип планировщика, список задач и список исполнителей
 def create_scheduler(
-    kind: str,
-    *,
-    workers: int = 1,
-    seed: Optional[int] = None,
-    jitter_pct: float = 0.0,
+    kind: Union[SchedulerKind, str],
+    tasks: List[ITask],
+    runners: List[IRunner],
 ) -> IScheduler:
-#фабрика создания планировашика. определяет тип планировщика, количество воркеров, случайностей и вотклонений. возвращает интерфейс ISchedulor. Фабрика нужна, чтобы 1 - не торчали наружу конкретные классы, 2 - раьбота пользователя через публичный API, 3 - олин раз задавать параметры
-    return create_scheduler_impl(
-        kind=kind,
-        workers=workers,
-        seed=seed,
-        jitter_pct=jitter_pct,
-    )
+    if isinstance(kind, str):
+        kind = SchedulerKind(kind)
+
+    if not runners:
+        raise ValueError("Runner list must not be empty")
+
+    if kind == SchedulerKind.SEQUENTIAL:
+        return SequentialDepsScheduler(tasks=tasks, runners=runners)
+
+    if kind == SchedulerKind.PARALLEL:
+        return ParallelFIFODepScheduler(tasks=tasks, runners=runners)
+
+    if kind == SchedulerKind.DAG_PRIORITY:
+        return DagUserPriorityScheduler(tasks=tasks, runners=runners)
+
+    if kind == SchedulerKind.DAG_CRITICAL:
+        return DagCriticalPathScheduler(tasks=tasks, runners=runners)
+
+    raise ValueError(f"Unsupported scheduler kind: {kind}")
