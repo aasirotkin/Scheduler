@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from task_spec import TaskSpec
+from Include.Scheduler.IFaces.task_spec import TaskSpec
 
 
 class ITask(ABC):
