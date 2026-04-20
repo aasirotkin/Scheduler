@@ -2,11 +2,11 @@
 
 from typing import Dict, Optional, Type
 
-from base_scheduler import BaseScheduler
-from scheduler_dag_critical import DagCriticalPathScheduler
-from scheduler_dag_priority import DagUserPriorityScheduler
-from scheduler_parallel import ParallelFIFODepScheduler
-from scheduler_sequential import SequentialDepsScheduler
+from Src.base_scheduler import BaseScheduler
+from Src.scheduler_dag_critical import DagCriticalPathScheduler
+from Src.scheduler_dag_priority import DagUserPriorityScheduler
+from Src.scheduler_parallel import ParallelFIFODepScheduler
+from Src.scheduler_sequential import SequentialDepsScheduler
 
 
 _REGISTRY: Dict[str, Type[BaseScheduler]] = {
