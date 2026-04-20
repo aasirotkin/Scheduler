@@ -3,8 +3,8 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 
-from i_task import ITask
-from task_result import TaskResult
+from Include.Scheduler.IFaces.i_task import ITask
+from Include.Scheduler.IFaces.task_result import TaskResult
 
 
 class IScheduler(ABC):
@@ -34,4 +34,5 @@ class IScheduler(ABC):
 
     @abstractmethod
     def run_all(self) -> Dict[str, TaskResult]:
+        ...
         ...
