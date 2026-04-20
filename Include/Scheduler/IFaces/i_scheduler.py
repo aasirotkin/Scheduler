@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import Dict, List, Optional
 
-from Include.Scheduler.IFaces.i_task import ITask
 from Include.Scheduler.IFaces.task_result import TaskResult
 
+class SchedulerStatus(str, Enum):
+    RUNNING = "running"
+    FINISHED = "finished"
 
 class IScheduler(ABC):
+    
     @abstractmethod
     def get_name(self) -> str:
         ...
-
     @abstractmethod
-    def add_task(self, task: ITask) -> None:
-        ...
-
-    @abstractmethod
-    def remove_task(self, task_id: str) -> None:
+    def get_status(self) -> SchedulerStatus:
         ...
 
     @abstractmethod
@@ -35,4 +34,4 @@ class IScheduler(ABC):
     @abstractmethod
     def run_all(self) -> Dict[str, TaskResult]:
         ...
-        ...
+
