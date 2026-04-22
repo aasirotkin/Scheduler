@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from __future__ import annotations
 
 from typing import Callable, Dict, Optional
@@ -5,12 +7,14 @@ from typing import Callable, Dict, Optional
 from Src.local_runner import LocalRunner
 from Include.Scheduler.runner_engine import run_with_deps
 from Include.Scheduler.IFaces.task_result import TaskResult
-from Include.Scheduler.IFaces.task_spec import TaskSpec
 
-#движок исполнителя, на входе путь до скрипта задачи, набор задач и исполнителей, шумы и функци для выбора готовой здаачи
+
+# движок исполнителя, на входе путь до скрипта задачи, набор задач и исполнителей,
+# шумы и функция для выбора готовой задачи
 EngineFn = Callable[..., Dict[str, TaskResult]]
 
-#фабрика, делаем так, чтоюы про runner_engine знала только она, а не весь проект. 
+
+# фабрика, делаем так, чтобы про runner_engine знала только она, а не весь проект
 class RunnerFactory:
     @staticmethod
     def create_local_runner(
@@ -26,7 +30,8 @@ class RunnerFactory:
         mem_weight: float = 1.0,
         net_weight: float = 1.0,
     ) -> LocalRunner:
-# локальный раннер, оценивает ресурсы на задачу, собирает результаты, может параллельно задачи запускать
+        # локальный раннер, оценивает ресурсы на задачу,
+        # собирает результаты, может параллельно запускать несколько задач
         return LocalRunner(
             runner_id=runner_id,
             cpu_percent=cpu_percent,
@@ -40,7 +45,7 @@ class RunnerFactory:
             net_weight=net_weight,
         )
 
-# возвращает двидок выполнения задач (с зависимостями итп)  
+    # возвращает движок выполнения задач (с зависимостями и тп)
     @staticmethod
     def create_dependency_engine() -> EngineFn:
         return run_with_deps
