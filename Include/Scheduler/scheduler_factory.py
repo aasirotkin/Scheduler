@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from enum import Enum
 from typing import List, Union
 
@@ -21,6 +19,9 @@ class SchedulerKind(str, Enum):
 
 
 # фабрика создания планировщика: принимает тип планировщика, список задач и список исполнителей
+# список runners нужен как конфигурация, по нему берём число workers
+# а сами задачи уже докидываем в scheduler через add_task
+
 def create_scheduler(
     kind: Union[SchedulerKind, str],
     tasks: List[ITask],
@@ -32,16 +33,20 @@ def create_scheduler(
     if not runners:
         raise ValueError("Runner list must not be empty")
 
+    workers = len(runners)
+
     if kind == SchedulerKind.SEQUENTIAL:
-        return SequentialDepsScheduler(tasks=tasks, runners=runners)
+        scheduler: IScheduler = SequentialDepsScheduler(workers=1)
+    elif kind == SchedulerKind.PARALLEL:
+        scheduler = ParallelFIFODepScheduler(workers=workers)
+    elif kind == SchedulerKind.DAG_PRIORITY:
+        scheduler = DagUserPriorityScheduler(workers=workers)
+    elif kind == SchedulerKind.DAG_CRITICAL:
+        scheduler = DagCriticalPathScheduler(workers=workers)
+    else:
+        raise ValueError(f"Unsupported scheduler kind: {kind}")
 
-    if kind == SchedulerKind.PARALLEL:
-        return ParallelFIFODepScheduler(tasks=tasks, runners=runners)
+    for task in tasks:
+        scheduler.add_task(task)
 
-    if kind == SchedulerKind.DAG_PRIORITY:
-        return DagUserPriorityScheduler(tasks=tasks, runners=runners)
-
-    if kind == SchedulerKind.DAG_CRITICAL:
-        return DagCriticalPathScheduler(tasks=tasks, runners=runners)
-
-    raise ValueError(f"Unsupported scheduler kind: {kind}")
+    return scheduler
