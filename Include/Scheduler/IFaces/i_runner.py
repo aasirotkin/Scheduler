@@ -1,70 +1,65 @@
-#!/usr/bin/env python3
-
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple
+from dataclasses import dataclass
+from typing import List, Optional
 
+from Include.Scheduler.IFaces.i_task import ITask
 from Include.Scheduler.IFaces.task_result import TaskResult
 
 
-# интерфейс исполнителя: хранит и считает свои ресурсы,принимает задачу к исполнению, позволяет получить результат по id, если он уже готов
-class IRunner(ABC):
+@dataclass(frozen=True)
+class RunnerResources:
+    cpu_percent: float
+    mem_mb: float
+    net_mbps: float
 
+    # сложение ресурсов
+    def add(self, other: "RunnerResources") -> "RunnerResources":
+        return RunnerResources(
+            cpu_percent=self.cpu_percent + other.cpu_percent,
+            mem_mb=self.mem_mb + other.mem_mb,
+            net_mbps=self.net_mbps + other.net_mbps,
+        )
+
+    # вычитание ресурсов
+    def sub(self, other: "RunnerResources") -> "RunnerResources":
+        return RunnerResources(
+            cpu_percent=max(0.0, self.cpu_percent - other.cpu_percent),
+            mem_mb=max(0.0, self.mem_mb - other.mem_mb),
+            net_mbps=max(0.0, self.net_mbps - other.net_mbps),
+        )
+
+    # влезает ли одна тройка ресурсов в другую
+    def fits(self, other: "RunnerResources") -> bool:
+        return (
+            self.cpu_percent >= other.cpu_percent
+            and self.mem_mb >= other.mem_mb
+            and self.net_mbps >= other.net_mbps
+        )
+
+
+# интерфейс исполнителя: хранит и считает свои ресурсы, принимает задачу к исполнению,
+# позволяет получить готовые результаты и завершить активные задачи
+class IRunner(ABC):
     @abstractmethod
     def get_id(self) -> str:
         ...
 
-# полные ресурсы   (cpu_percent, mem_mb, net_mbps)
+    # полные ресурсы (cpu_percent, mem_mb, net_mbps)
     @abstractmethod
-    def total_resources(self) -> Tuple[float, float, float]:
+    def total_resources(self) -> RunnerResources:
         ...
 
-# занятые ресурсы   (cpu_percent, mem_mb, net_mbps)
+    # занятые ресурсы (cpu_percent, mem_mb, net_mbps)
     @abstractmethod
-    def used_resources(self) -> Tuple[float, float, float]:
+    def used_resources(self) -> RunnerResources:
         ...
 
-    def add_resources(
-        self,
-        left: Tuple[float, float, float],
-        right: Tuple[float, float, float],
-    ) -> Tuple[float, float, float]:
-        return (
-            left[0] + right[0],
-            left[1] + right[1],
-            left[2] + right[2],
-        )
-
-    def sub_resources(
-        self,
-        left: Tuple[float, float, float],
-        right: Tuple[float, float, float],
-    ) -> Tuple[float, float, float]:
-        return (
-            max(0.0, left[0] - right[0]),
-            max(0.0, left[1] - right[1]),
-            max(0.0, left[2] - right[2]),
-        )
-
-# влезает ли     
-    def fits_resources(
-        self,
-        available: Tuple[float, float, float],
-        required: Tuple[float, float, float],
-    ) -> bool:
-        return (
-            available[0] >= required[0]
-            and available[1] >= required[1]
-            and available[2] >= required[2]
-        )
-
-# свободные     
-    def free_resources(self) -> Tuple[float, float, float]:
-        return self.sub_resources(
-            self.total_resources(),
-            self.used_resources(),
-        )
+    # свободные ресурсы
+    @abstractmethod
+    def free_resources(self) -> RunnerResources:
+        ...
 
     @abstractmethod
     def power(self) -> float:
@@ -73,15 +68,6 @@ class IRunner(ABC):
     @abstractmethod
     def power_left(self) -> float:
         ...
-
-    def can_run(
-        self,
-        cpu_percent: float,
-        mem_mb: float,
-        net_mbps: float,
-    ) -> bool:
-        required = (cpu_percent, mem_mb, net_mbps)
-        return self.fits_resources(self.free_resources(), required)
 
     @abstractmethod
     def active_task_ids(self) -> List[str]:
@@ -95,23 +81,24 @@ class IRunner(ABC):
     def has_running_tasks(self) -> bool:
         ...
 
-# запуск скрипта, если хватает ресурсов. возвращает True, если выполняет задачу
+    # можно ли сейчас запустить эту задачу
     @abstractmethod
-    def submit(
-        self,
-        task_id: str,
-        script: str,
-        script_kind: str,
-        cpu_percent: float,
-        mem_mb: float,
-        net_mbps: float,
-    ) -> bool:
+    def can_run(self, task: ITask) -> bool:
+        ...
+
+    # запуск задачи, если хватает ресурсов
+    @abstractmethod
+    def submit(self, task: ITask) -> None:
         ...
 
     @abstractmethod
-    def get_result_if_ready(self, task_id: str) -> Optional[TaskResult]:
+    def poll_result(self) -> Optional[TaskResult]:
         ...
 
     @abstractmethod
     def poll_results(self) -> List[TaskResult]:
+        ...
+
+    @abstractmethod
+    def shutdown(self) -> None:
         ...
