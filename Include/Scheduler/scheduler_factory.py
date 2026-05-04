@@ -20,8 +20,6 @@ class SchedulerKind(str, Enum):
     DAG_CRITICAL = "dag_critical"
 
 
-# фабрика создания планировщика: принимает тип планировщика, список задач и список исполнителей
-
 # фабрика планировщиков, по аналогии с фабрикой раннеров
 class SchedulerFactory:
     @staticmethod
@@ -32,15 +30,13 @@ class SchedulerFactory:
     ) -> IScheduler:
         if isinstance(kind, str):
             kind = SchedulerKind(kind)
-#проверка наличия исполнителей
+
+        # проверка наличия исполнителей
         if not runners:
             raise ValueError("Runner list must not be empty")
 
-#количество исполнителей из списка раннеров
-        workers = len(runners)
-
-#прочек на тип планировшика
-       if kind == SchedulerKind.SEQUENTIAL:
+        # выбор типа планировщика
+        if kind == SchedulerKind.SEQUENTIAL:
             return SequentialDepsScheduler(
                 tasks=tasks,
                 runners=[runners[0]],
