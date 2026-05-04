@@ -14,7 +14,7 @@ class TaskResult:
     start_ts: float
     end_ts: float
     return_code: int
-    status: TaskResult
+    status: TaskStatus
     message: str = ""
 
     @property
