@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from dataclasses import dataclass
 from enum import Enum
 
@@ -16,8 +14,8 @@ class TaskResult:
     start_ts: float
     end_ts: float
     return_code: int
-    status: str
-    # TODO: добавь message, туда мы должны писать cout
+    status: TaskResult
+    message: str = ""
 
     @property
     def duration_s(self) -> float:
