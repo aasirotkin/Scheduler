@@ -89,16 +89,23 @@ class IRunner(ABC):
     # запуск задачи, если хватает ресурсов
     @abstractmethod
     def submit(self, task: ITask) -> None:
+        # TODO: тут нужно bool возвращать
         ...
 
     @abstractmethod
     def poll_result(self) -> Optional[TaskResult]:
+        # TODO: у тебя есть active_task_ids,
+        # передавай сюда id и возвращай результат
+        # если он готов для указанной задачи
         ...
 
     @abstractmethod
     def poll_results(self) -> List[TaskResult]:
+        # TODO: убери этот метод, он нам не нужен
         ...
 
     @abstractmethod
     def shutdown(self) -> None:
+        # TODO: удали этот метод
         ...
+

@@ -22,6 +22,7 @@ class SchedulerKind(str, Enum):
 # список runners нужен как конфигурация, по нему берём число workers
 # а сами задачи уже докидываем в scheduler через add_task
 
+# TODO: сделай фабрику по аналогии с фабрикой раннеров, нужно как-то однотипно делать
 def create_scheduler(
     kind: Union[SchedulerKind, str],
     tasks: List[ITask],

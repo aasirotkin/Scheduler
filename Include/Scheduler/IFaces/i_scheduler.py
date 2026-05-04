@@ -45,3 +45,4 @@ class IScheduler(ABC):
     @abstractmethod
     def run_all(self) -> Dict[str, TaskResult]:
         ...
+

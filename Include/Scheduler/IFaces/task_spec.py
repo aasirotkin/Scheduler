@@ -14,3 +14,4 @@ class TaskSpec:
     duration: float
     priority: int = 0
     deps: Tuple[str, ...] = field(default_factory=tuple)
+

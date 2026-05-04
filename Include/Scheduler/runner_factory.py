@@ -9,6 +9,7 @@ from Include.Scheduler.runner_engine import run_with_deps
 from Include.Scheduler.IFaces.task_result import TaskResult
 
 
+# TODO: Это фабрика на раннеры, тут не нужен дивжок никакой, удали
 # движок исполнителя, на входе путь до скрипта задачи, набор задач и исполнителей,
 # шумы и функция для выбора готовой задачи
 EngineFn = Callable[..., Dict[str, TaskResult]]
@@ -19,6 +20,7 @@ class RunnerFactory:
     @staticmethod
     def create_local_runner(
         runner_id: str,
+        # TODO: что это за звёздочка? удали её
         *,
         cpu_percent: float,
         mem_mb: float,
@@ -45,7 +47,9 @@ class RunnerFactory:
             net_weight=net_weight,
         )
 
+    # TODO: Это фабрика на раннеры, тут не нужен дивжок никакой, удали
     # возвращает движок выполнения задач (с зависимостями и тп)
     @staticmethod
     def create_dependency_engine() -> EngineFn:
         return run_with_deps
+

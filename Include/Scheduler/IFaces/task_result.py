@@ -17,7 +17,9 @@ class TaskResult:
     end_ts: float
     return_code: int
     status: str
+    # TODO: добавь message, туда мы должны писать cout
 
     @property
     def duration_s(self) -> float:
         return self.end_ts - self.start_ts
+

@@ -1,3 +1,5 @@
+# TODO: удали этот файл
+
 import json
 import sys
 import time
