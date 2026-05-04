@@ -54,8 +54,5 @@ class SchedulerFactory:
         else:
             raise ValueError(f"Unsupported scheduler kind: {kind}")
 
-# добавляем задачи 
-        for task in tasks:
-            scheduler.add_task(task)
     
         return scheduler
