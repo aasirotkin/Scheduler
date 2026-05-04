@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Optional
 from Src.local_runner import LocalRunner
 
-# фабрика, делаем так, чтобы про runner_engine знала только она, а не весь проект
+# фабрика, отвечает за создание исполнителей для задач
 class RunnerFactory:
     @staticmethod
     def create_local_runner(
