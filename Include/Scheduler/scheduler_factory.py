@@ -21,13 +21,10 @@ class SchedulerKind(str, Enum):
 
 
 # фабрика создания планировщика: принимает тип планировщика, список задач и список исполнителей
-# список runners нужен как конфигурация, по нему берём число workers
-# а сами задачи уже докидываем в scheduler через add_task
 
 # фабрика планировщиков, по аналогии с фабрикой раннеров
 class SchedulerFactory:
     @staticmethod
-
     def create_scheduler(
         kind: Union[SchedulerKind, str],
         tasks: List[ITask],
@@ -43,16 +40,28 @@ class SchedulerFactory:
         workers = len(runners)
 
 #прочек на тип планировшика
-        if kind == SchedulerKind.SEQUENTIAL:
-            scheduler: IScheduler = SequentialDepsScheduler(workers=1)
-        elif kind == SchedulerKind.PARALLEL:
-            scheduler = ParallelFIFODepScheduler(workers=workers)
-        elif kind == SchedulerKind.DAG_PRIORITY:
-            scheduler = DagUserPriorityScheduler(workers=workers)
-        elif kind == SchedulerKind.DAG_CRITICAL:
-            scheduler = DagCriticalPathScheduler(workers=workers)
-        else:
-            raise ValueError(f"Unsupported scheduler kind: {kind}")
+       if kind == SchedulerKind.SEQUENTIAL:
+            return SequentialDepsScheduler(
+                tasks=tasks,
+                runners=[runners[0]],
+            )
 
-    
-        return scheduler
+        if kind == SchedulerKind.PARALLEL:
+            return ParallelFIFODepScheduler(
+                tasks=tasks,
+                runners=runners,
+            )
+
+        if kind == SchedulerKind.DAG_PRIORITY:
+            return DagUserPriorityScheduler(
+                tasks=tasks,
+                runners=runners,
+            )
+
+        if kind == SchedulerKind.DAG_CRITICAL:
+            return DagCriticalPathScheduler(
+                tasks=tasks,
+                runners=runners,
+            )
+
+        raise ValueError(f"Unsupported scheduler kind: {kind}")
