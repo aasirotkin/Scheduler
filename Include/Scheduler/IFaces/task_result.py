@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from dataclasses import dataclass
 from enum import Enum
 
@@ -16,8 +14,10 @@ class TaskResult:
     start_ts: float
     end_ts: float
     return_code: int
-    status: str
+    status: TaskStatus
+    message: str = ""
 
     @property
     def duration_s(self) -> float:
         return self.end_ts - self.start_ts
+

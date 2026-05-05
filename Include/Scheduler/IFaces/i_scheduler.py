@@ -20,16 +20,6 @@ class IScheduler(ABC):
     def get_status(self) -> SchedulerStatus:
         ...
 
-    # добавить задачу в планировщик
-    @abstractmethod
-    def add_task(self, task: ITask) -> None:
-        ...
-
-    # удалить задачу по id
-    @abstractmethod
-    def remove_task(self, task_id: str) -> None:
-        ...
-
     @abstractmethod
     def list_tasks(self) -> List[str]:
         ...
@@ -45,3 +35,4 @@ class IScheduler(ABC):
     @abstractmethod
     def run_all(self) -> Dict[str, TaskResult]:
         ...
+

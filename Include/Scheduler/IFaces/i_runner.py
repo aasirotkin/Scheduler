@@ -40,7 +40,7 @@ class RunnerResources:
 
 
 # интерфейс исполнителя: хранит и считает свои ресурсы, принимает задачу к исполнению,
-# позволяет получить готовые результаты и завершить активные задачи
+# позволяет получить готовые результаты и получить результаты активных задач по id
 class IRunner(ABC):
     @abstractmethod
     def get_id(self) -> str:
@@ -88,17 +88,10 @@ class IRunner(ABC):
 
     # запуск задачи, если хватает ресурсов
     @abstractmethod
-    def submit(self, task: ITask) -> None:
+    def submit(self, task: ITask) -> bool:
         ...
 
     @abstractmethod
-    def poll_result(self) -> Optional[TaskResult]:
-        ...
-
-    @abstractmethod
-    def poll_results(self) -> List[TaskResult]:
-        ...
-
-    @abstractmethod
-    def shutdown(self) -> None:
+    def poll_result(self, task_id: str) -> Optional[TaskResult]:
+        # есть active_task_ids, передаваем сюда id и возвращаем результат, если он готов для указанной задачи
         ...
