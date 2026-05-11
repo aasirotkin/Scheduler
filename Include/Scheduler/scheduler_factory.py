@@ -22,6 +22,8 @@ class SchedulerKind(str, Enum):
 
 # фабрика планировщиков, по аналогии с фабрикой раннеров
 class SchedulerFactory:
+    # TODO: BEGIN
+    # начиная со строчки 27 и заканчивая строчкой 78 нужно вынести в отдельный класс помощник. А ещё лучше скрыть это в папке Src и вызывать этого помощника там. Это просто лишний код для фабрики. И к нему будут ненужные вопросы. А в Src смотреть не будут.
     @staticmethod
     def _object_id(obj: Any, default_prefix: str, index: int) -> str:
         if hasattr(obj, "get_id"):
@@ -75,6 +77,8 @@ class SchedulerFactory:
 
         return scheduler
 
+    # TODO: END
+
     @staticmethod
     def create_scheduler(
         kind: Union[SchedulerKind, str],
@@ -123,6 +127,7 @@ class SchedulerFactory:
 
         raise ValueError(f"Unsupported scheduler kind: {kind}")
 
+    # TODO: этот метод точно такой же. Давай удалил его, чтобы не было вопросов зачем он нужен
     @staticmethod
     def create(
         kind: Union[SchedulerKind, str],
