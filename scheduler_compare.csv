@@ -1,0 +1,5 @@
+scheduler,task_count,elapsed_sec,speedup_vs_sequential,tasks_done,tasks_failed,status,comment
+sequential,20,34.991291761398315,1.0,20,0,ok,
+parallel,20,15.47653603553772,2.260925292394253,20,0,ok,
+dag_priority,20,21.217450857162476,1.6491751057637605,20,0,ok,
+dag_critical,20,15.465779304504395,2.2624978070912425,20,0,ok,
